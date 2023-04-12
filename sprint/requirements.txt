@@ -1,0 +1,3 @@
+djangorestframework
+python-dotenv
+django psycopg2
