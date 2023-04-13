@@ -96,7 +96,7 @@ class Coords(models.Model):
 
 
 class Images(models.Model):
-    data = models.ImageField(upload_to='photos/%Y/%m/%d/', verbose_name='Изображение', null=True)
+    data = models.ImageField(upload_to='media/%Y/%m/%d/', verbose_name='Изображение', null=True)
     title = models.CharField(max_length=255)
     date_added = models.DateField(auto_now_add=True)
 
