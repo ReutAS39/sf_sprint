@@ -21,7 +21,7 @@ class ImagesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Images
-        fields = ('data', 'title')
+        fields = ('data', 'title',)
         verbose_name = 'Изображение'
 
 
@@ -37,7 +37,6 @@ class PerevalSerializer(serializers.ModelSerializer):
     coords = CoordsSerializer()
     level = LevelSerialize()
     images = ImagesSerializer(many=True)
-
     class Meta:
         model = PerevalAdded
         exclude = ('id', 'status')

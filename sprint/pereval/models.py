@@ -69,10 +69,10 @@ class Level(models.Model):  # ок
         ("3Б", "3Б"),
     ]
 
-    winter = models.CharField(max_length=20, choices=LEVEL_CHOICES, verbose_name='Зима', blank=True)
-    summer = models.CharField(max_length=20, choices=LEVEL_CHOICES, verbose_name='Лето', blank=True)
-    autumn = models.CharField(max_length=20, choices=LEVEL_CHOICES, verbose_name='Осень', blank=True)
-    spring = models.CharField(max_length=20, choices=LEVEL_CHOICES, verbose_name='Весна', blank=True)
+    winter = models.CharField(max_length=20, choices=LEVEL_CHOICES, verbose_name='Зима', null=True, blank=True)
+    summer = models.CharField(max_length=20, choices=LEVEL_CHOICES, verbose_name='Лето', null=True, blank=True)
+    autumn = models.CharField(max_length=20, choices=LEVEL_CHOICES, verbose_name='Осень', null=True, blank=True)
+    spring = models.CharField(max_length=20, choices=LEVEL_CHOICES, verbose_name='Весна', null=True, blank=True)
 
     class Meta:
         verbose_name = "Уровень сложности"
