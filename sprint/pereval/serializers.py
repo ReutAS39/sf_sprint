@@ -26,6 +26,7 @@ class ImagesSerializer(serializers.ModelSerializer):
 
 
 class UsersSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
     class Meta:
         model = Users
         fields = ('email', 'phone', 'fam', 'name', 'otc',)
@@ -47,9 +48,26 @@ class PerevalSerializer(serializers.ModelSerializer):
         coords_data = validated_data.pop('coords')
         image_data = validated_data.pop('images')
         levels_data = validated_data.pop('level')
-        user = Users.objects.create(**users_data)
         coords = Coords.objects.create(**coords_data)
-        level = Level.objects.create(**levels_data)
+
+        if Level.objects.filter(winter=levels_data['winter'],
+                                summer=levels_data['summer'],
+                                autumn=levels_data['autumn'],
+                                spring=levels_data['spring']
+                                ).exists():
+            level = Level.objects.get(winter=levels_data['winter'],
+                                      summer=levels_data['summer'],
+                                      autumn=levels_data['autumn'],
+                                      spring=levels_data['spring']
+                                      )
+        else:
+            level = Level.objects.create(**levels_data)
+
+        if Users.objects.filter(email=users_data['email']).exists():
+            user = Users.objects.get(email=users_data['email'])
+        else:
+            user = Users.objects.create(**users_data)
+
         pereval = PerevalAdded.objects.create(user=user, coords=coords, level=level, **validated_data)
         for img in image_data:
             image = Images.objects.create(**img)
