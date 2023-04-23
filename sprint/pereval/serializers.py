@@ -27,6 +27,7 @@ class ImagesSerializer(serializers.ModelSerializer):
 
 class UsersSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
+
     class Meta:
         model = Users
         fields = ('email', 'phone', 'fam', 'name', 'otc',)
@@ -41,7 +42,7 @@ class PerevalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PerevalAdded
-        exclude = ('id', 'status')
+        fields = '__all__'
 
     def create(self, validated_data):
         users_data = validated_data.pop('user')
@@ -73,3 +74,52 @@ class PerevalSerializer(serializers.ModelSerializer):
             image = Images.objects.create(**img)
             PerevaladdedImages.objects.create(images=image, perevaladded=pereval)
         return pereval
+
+    def update(self, instance, validated_data):
+
+        coords_data = validated_data.pop('coords')
+        image_data = validated_data.pop('images')
+        levels_data = validated_data.pop('level')
+        coords = instance.coords
+        level = instance.level
+
+        for img in image_data:
+            if Images.objects.filter(data=img['data'], title=img['title']).exists():
+                continue
+            else:
+                image = Images.objects.create(**img)
+                PerevaladdedImages.objects.create(images=image, perevaladded=instance)
+
+        coords.latitude = coords_data.get('latitude', coords.latitude)
+        coords.longitude = coords_data.get('longitude', coords.longitude)
+        coords.height = coords_data.get('height', coords.height)
+        coords.save()
+
+        level.winter = levels_data.get('winter', level.winter)
+        level.summer = levels_data.get('summer', level.summer)
+        level.autumn = levels_data.get('autumn', level.autumn)
+        level.spring = levels_data.get('spring', level.spring)
+        if Level.objects.filter(winter=levels_data['winter'],
+                                summer=levels_data['summer'],
+                                autumn=levels_data['autumn'],
+                                spring=levels_data['spring']
+                                ).exists():
+            instance.level = Level.objects.get(winter=levels_data['winter'],
+                                               summer=levels_data['summer'],
+                                               autumn=levels_data['autumn'],
+                                               spring=levels_data['spring']
+                                               )
+            instance.level.save()
+        else:
+            instance.level = Level.objects.create(winter=levels_data['winter'],
+                                                  summer=levels_data['summer'],
+                                                  autumn=levels_data['autumn'],
+                                                  spring=levels_data['spring'])
+            instance.level.save()
+
+        instance.beauty_title = validated_data.get('beauty_title', instance.beauty_title)
+        instance.title = validated_data.get('title', instance.title)
+        instance.other_titles = validated_data.get('other_titles', instance.other_titles)
+        instance.connect = validated_data.get("connect", instance.connect)
+        instance.save()
+        return instance
