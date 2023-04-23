@@ -21,7 +21,7 @@ from rest_framework import routers
 from pereval.views import SubmitData
 
 router = routers.SimpleRouter()
-router.register(r'pereval', SubmitData)
+router.register(r'submitData', SubmitData)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
