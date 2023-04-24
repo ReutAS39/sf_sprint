@@ -2,3 +2,4 @@ djangorestframework
 python-dotenv
 django psycopg2
 Pillow
+drf-yasg

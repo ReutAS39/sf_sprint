@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from .yasg import urlpatterns as doc_urls
 
 from pereval.views import SubmitData
 
@@ -27,3 +28,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include(router.urls)),
 ]
+
+urlpatterns += doc_urls
