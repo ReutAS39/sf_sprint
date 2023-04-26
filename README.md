@@ -36,7 +36,7 @@ POST/submitData/
  
  *принимает JSON в теле запроса с информацией о перевале. Пример JSON-а:*
 
-```json
+``` sh
 {
   "beauty_title": "пер. ",
   "title": "Пхия",
@@ -44,25 +44,30 @@ POST/submitData/
   "connect": "", // что соединяет, текстовое поле
  
   "add_time": "2021-09-22 13:18:13",
-  "user": {"email": "qwerty@mail.ru", 		
-        "fam": "Пупкин",
-		 "name": "Василий",
-		 "otc": "Иванович",
-        "phone": "+7 555 55 55"}, 
+  "user":{
+		"email": "qwerty@mail.ru", 
+		"fam": "Пупкин", 
+		"name": "Василий", 
+		"otc": "Иванович", 
+		"phone": "+7 555 55 55"
+		}, 
  
-   "coords":{
-  "latitude": "45.3842",
-  "longitude": "7.1525",
-  "height": "1200"}
- 
- 
-  level:{"winter": "", //Категория трудности. В разное время года перевал может иметь разную категорию трудности
-  "summer": "1А",
-  "autumn": "1А",
-  "spring": ""},
+  "coords":{
+		"latitude": "45.3842",
+		"longitude": "7.1525",
+		"height": "1200"
+		},
+# Категория трудности. В разное время года перевал может иметь разную категорию трудности
+  level:{
+		"winter": "", 
+		"summer": "1А",
+		"autumn": "1А",
+		"spring": ""
+		},
  
    images: [{data:"<картинка1>", title:"Седловина"}, {data:"<картинка>", title:"Подъём"}]
 }
+
 ```
 
 ***Результат метода: JSON***
@@ -126,7 +131,7 @@ PATCH /submitData/<id>
 
    
 ```python
-GET /submitData/?user_id__email=<email>
+GET /submitData/?user__email=<email>
 ```
 *позволяет получить данные обо всех объектах, которые пользователь с почтой `<email>` отправил на сервер.*
 
