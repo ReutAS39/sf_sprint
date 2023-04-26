@@ -14,6 +14,7 @@ class SubmitData(
                 ):
     queryset = PerevalAdded.objects.all()
     serializer_class = PerevalSerializer
+    http_method_names = ['get', 'post', 'patch']
 
     def get_queryset(self):
         email = self.request.query_params.get('user__email', None)
@@ -25,6 +26,7 @@ class SubmitData(
         return self.queryset.none()
 
     def update(self, request, *args, **kwargs):
+
         submit_data = self.get_object()
 
         if submit_data.status != 'new':
