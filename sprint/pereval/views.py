@@ -25,6 +25,13 @@ class SubmitData(
             return self.queryset.filter(id=pk)
         return self.queryset.none()
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def update(self, request, *args, **kwargs):
 
         submit_data = self.get_object()
@@ -37,4 +44,5 @@ class SubmitData(
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
-        return Response({'state': 1, 'message': 'Данные успешно отредактированы'})
+        return Response({'state': 1, 'message': 'Данные успешно отредактированы', "Перевал": serializer.data},
+                        status=status.HTTP_204_NO_CONTENT)

@@ -22,7 +22,7 @@ from .yasg import urlpatterns as doc_urls
 from pereval.views import SubmitData
 
 router = routers.SimpleRouter()
-router.register(r'submitData', SubmitData)
+router.register(r'submitData', SubmitData, basename='submitData')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
