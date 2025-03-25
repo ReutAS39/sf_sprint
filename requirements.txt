@@ -1,0 +1,5 @@
+djangorestframework
+python-dotenv
+psycopg2
+Pillow
+drf-yasg
