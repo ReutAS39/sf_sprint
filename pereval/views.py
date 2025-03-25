@@ -23,7 +23,7 @@ class SubmitData(
             return self.queryset.filter(user__email=email)
         elif pk:
             return self.queryset.filter(id=pk)
-        return self.queryset.none()
+        return self.queryset
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
