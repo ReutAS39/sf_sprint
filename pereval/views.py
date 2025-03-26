@@ -1,42 +1,59 @@
-from drf_spectacular.utils import extend_schema
-from rest_framework import viewsets, mixins, status
+from drf_spectacular.utils import extend_schema, OpenApiResponse
+from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from pereval.models import PerevalAdded
 from pereval.serializers import PerevalSerializer
 
 
-class SubmitData(
-                mixins.CreateModelMixin,
-                mixins.RetrieveModelMixin,
-                viewsets.GenericViewSet,
-                mixins.UpdateModelMixin,
-                mixins.ListModelMixin
-                ):
-    queryset = PerevalAdded.objects.all()
-    serializer_class = PerevalSerializer
-    http_method_names = ['get', 'post', 'patch']
-
-    def get_queryset(self):
-        email = self.request.query_params.get('user__email', None)
-        pk = self.kwargs.get('pk')
-        if email:
-            return self.queryset.filter(user__email=email)
-        elif pk:
-            return self.queryset.filter(id=pk)
-        return self.queryset
-
-    @extend_schema(summary="Test description of retrieve method")
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+class PerevalAdd(APIView):
+    @extend_schema(
+        summary="Добавить перевал",
+        description="Добавление перевала",
+        request=PerevalSerializer,
+        responses={
+            201: OpenApiResponse(response=PerevalSerializer, description="Перевал успешно создан"),
+            400: OpenApiResponse(description="Ошибки валидации")
+        }
+    )
+    def post(self, request):
+        serializer = PerevalSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(data=f'"status": 200, "message": id: {serializer.data['id']}',
-                            status=status.HTTP_201_CREATED)
+            pereval = serializer.save()
+            return Response({"status": "Перевал добавлен", "id": pereval.id}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def update(self, request, *args, **kwargs):
 
+class PerevalDetail(APIView):
+    @extend_schema(
+        summary="Получение информации о перевале",
+        description="Возвращает информацию о перевале по его ID.",
+        responses={
+            200: OpenApiResponse(response=PerevalSerializer, description="Информация о перевале"),
+            404: OpenApiResponse(description="Перевал не найден")
+        }
+    )
+    def get(self, request, id):
+        try:
+            pereval = PerevalAdded.objects.get(id=id)
+        except PerevalAdded.DoesNotExist:
+            return Response({"error": "Перевал не найден"}, status=status.HTTP_404_NOT_FOUND)
+        serializer = PerevalSerializer(pereval)
+        return Response(serializer.data)
+
+
+class PerevalUpdate(APIView):
+    @extend_schema(
+        summary="Отредактировать запись перевала",
+        description="Редакция записи перевала",
+        request=PerevalSerializer,
+        responses={
+            201: OpenApiResponse(response=PerevalSerializer, description="Запись успешно отредактирована"),
+            400: OpenApiResponse(description="Ошибки валидации")
+        }
+    )
+    def patch(self, request, id, *args, **kwargs):
         submit_data = self.get_object()
 
         if submit_data.status != 'new':
@@ -49,3 +66,17 @@ class SubmitData(
 
         return Response({'state': 1, 'message': 'Данные успешно отредактированы', "Перевал": serializer.data},
                         status=status.HTTP_204_NO_CONTENT)
+
+
+class PerevalList(APIView):
+    @extend_schema(
+        summary="Получение информации обо всех перевалах",
+        description="Возвращает список всех перевалов.",
+        responses={
+            200: OpenApiResponse(response=PerevalSerializer(many=True), description="Список всех перевалов")
+        }
+    )
+    def get(self, request, email):
+        perevals = PerevalAdded.objects.filter(user__email=email)
+        serializer = PerevalSerializer(perevals, many=True)
+        return Response(serializer.data)
