@@ -53,19 +53,21 @@ class PerevalUpdate(APIView):
             400: OpenApiResponse(description="Ошибки валидации")
         }
     )
-    def patch(self, request, id, *args, **kwargs):
-        submit_data = self.get_object()
-
-        if submit_data.status != 'new':
-            return Response({'state': 0, 'message': 'Данные не могут быть отредактированы'},
+    def patch(self, request, id):
+        try:
+            pereval = PerevalAdded.objects.get(id=id)
+        except PerevalAdded.DoesNotExist:
+            return Response({"error": "Перевал не найден"}, status=status.HTTP_404_NOT_FOUND)
+        if pereval.status != 'new':
+            return Response({'state': 0, 'message': f'Данные не могут быть отредактированы. Статус записи -{pereval.status}'},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = self.get_serializer(submit_data, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        return Response({'state': 1, 'message': 'Данные успешно отредактированы', "Перевал": serializer.data},
-                        status=status.HTTP_204_NO_CONTENT)
+        serializer = PerevalSerializer(pereval, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'state': 1, 'message': 'Данные успешно отредактированы', "Перевал": serializer.data})
+        return Response({'state': 0, 'message': 'Данные не могут быть отредактированы'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 class PerevalList(APIView):
