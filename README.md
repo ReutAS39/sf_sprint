@@ -38,12 +38,6 @@ POST/submitData/
 
 ``` sh
 {
-  "beauty_title": "пер. ",
-  "title": "Пхия",
-  "other_titles": "Триев",
-  "connect": "", // что соединяет, текстовое поле
- 
-  "add_time": "2021-09-22 13:18:13",
   "user":{
 		"email": "qwerty@mail.ru", 
 		"fam": "Пупкин", 
@@ -51,8 +45,7 @@ POST/submitData/
 		"otc": "Иванович", 
 		"phone": "+7 555 55 55"
 		}, 
- 
-  "coords":{
+   "coords":{
 		"latitude": "45.3842",
 		"longitude": "7.1525",
 		"height": "1200"
@@ -65,7 +58,11 @@ POST/submitData/
 		"spring": ""
 		},
  
-   images: [{data:"<картинка1>", title:"Седловина"}, {data:"<картинка>", title:"Подъём"}]
+  images: [{data:"<картинка1>", title:"Седловина"}, {data:"<картинка>", title:"Подъём"}]
+  "beauty_title": "пер. ",
+  "title": "Пхия",
+  "other_titles": "Триев",
+  "connect": "", // что соединяет, текстовое поле
 }
 
 ```
