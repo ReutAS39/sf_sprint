@@ -14,7 +14,8 @@ class PerevalAdd(APIView):
         request=PerevalSerializer,
         responses={
             201: OpenApiResponse(response=PerevalSerializer, description="Перевал успешно создан"),
-            400: OpenApiResponse(description="Ошибки валидации")
+            400: OpenApiResponse(description="Ошибки валидации"),
+            500: OpenApiResponse(description="Ошибка при выполнении операции")
         }
     )
     def post(self, request):

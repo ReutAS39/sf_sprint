@@ -4,6 +4,9 @@ from pereval.models import PerevalAdded, Coords, Level, Users, Images, Perevalad
 
 
 class CoordsSerializer(serializers.ModelSerializer):
+    latitude = serializers.FloatField(min_value=-90.0, max_value=90.0)
+    longitude = serializers.FloatField(min_value=-180.0, max_value= 180.0)
+    height = serializers.IntegerField(max_value=9000)
     class Meta:
         model = Coords
         verbose_name = 'Координаты'
@@ -49,20 +52,21 @@ class PerevalSerializer(serializers.ModelSerializer):
         coords_data = validated_data.pop('coords')
         image_data = validated_data.pop('images')
         levels_data = validated_data.pop('level')
-        coords = Coords.objects.create(**coords_data)
+        # coords = Coords.objects.create(**coords_data)
 
-        if Level.objects.filter(winter=levels_data['winter'],
-                                summer=levels_data['summer'],
-                                autumn=levels_data['autumn'],
-                                spring=levels_data['spring']
+        if Level.objects.filter(**levels_data
                                 ).exists():
-            level = Level.objects.get(winter=levels_data['winter'],
-                                      summer=levels_data['summer'],
-                                      autumn=levels_data['autumn'],
-                                      spring=levels_data['spring']
+            level = Level.objects.get(**levels_data
                                       )
         else:
             level = Level.objects.create(**levels_data)
+
+        if Coords.objects.filter(**coords_data
+                                ).exists():
+            coords = Coords.objects.get(**coords_data
+                                      )
+        else:
+            coords = Coords.objects.create(**coords_data)
 
         if Users.objects.filter(email=users_data['email']).exists():
             user = Users.objects.get(email=users_data['email'])
