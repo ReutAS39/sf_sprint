@@ -81,7 +81,8 @@ class PerevalSerializer(serializers.ModelSerializer):
         levels_data = validated_data.pop('level')
         coords = instance.coords
         level = instance.level
-
+        print(coords_data)
+        print(coords)
         for img in image_data:
             if Images.objects.filter(data=img['data'], title=img['title']).exists():
                 continue
