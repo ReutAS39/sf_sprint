@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from pereval.models import PerevalAdded, Coords, Level, Users, Images, PerevaladdedImages
+from pereval.models import PerevalAdded, Coords, Difficulty, Users, Images, PerevaladdedImages
 
 
 class CoordsSerializer(serializers.ModelSerializer):
@@ -13,9 +13,9 @@ class CoordsSerializer(serializers.ModelSerializer):
         exclude = ('id',)
 
 
-class LevelSerialize(serializers.ModelSerializer):
+class DifficultySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Level
+        model = Difficulty
         exclude = ('id',)
 
 
@@ -40,7 +40,7 @@ class UsersSerializer(serializers.ModelSerializer):
 class PerevalSerializer(serializers.ModelSerializer):
     user = UsersSerializer()
     coords = CoordsSerializer()
-    level = LevelSerialize()
+    difficulty = DifficultySerializer()
     images = ImagesSerializer(many=True)
 
     class Meta:
@@ -51,12 +51,12 @@ class PerevalSerializer(serializers.ModelSerializer):
         users_data = validated_data.pop('user')
         coords_data = validated_data.pop('coords')
         image_data = validated_data.pop('images')
-        levels_data = validated_data.pop('level')
+        difficulty_data = validated_data.pop('difficulty')
 
-        if Level.objects.filter(**levels_data).exists():
-            level = Level.objects.get(**levels_data)
+        if Difficulty.objects.filter(**difficulty_data).exists():
+            difficulty = Difficulty.objects.get(**difficulty_data)
         else:
-            level = Level.objects.create(**levels_data)
+            difficulty = Difficulty.objects.create(**difficulty_data)
 
         if Coords.objects.filter(**coords_data).exists():
             coords = Coords.objects.get(**coords_data)
@@ -68,7 +68,7 @@ class PerevalSerializer(serializers.ModelSerializer):
         else:
             user = Users.objects.create(**users_data)
 
-        pereval = PerevalAdded.objects.create(user=user, coords=coords, level=level, **validated_data)
+        pereval = PerevalAdded.objects.create(user=user, coords=coords, difficulty=difficulty, **validated_data)
         for img in image_data:
             image = Images.objects.create(**img)
             PerevaladdedImages.objects.create(images=image, perevaladded=pereval)
@@ -78,9 +78,9 @@ class PerevalSerializer(serializers.ModelSerializer):
 
         coords_data = validated_data.pop('coords')
         image_data = validated_data.pop('images')
-        levels_data = validated_data.pop('level')
+        difficulty_data = validated_data.pop('difficulty')
         coords = instance.coords
-        level = instance.level
+        difficulty = instance.difficulty
         print(coords_data)
         print(coords)
         for img in image_data:
@@ -95,16 +95,16 @@ class PerevalSerializer(serializers.ModelSerializer):
         coords.height = coords_data.get('height', coords.height)
         coords.save()
 
-        level.winter = levels_data.get('winter', level.winter)
-        level.summer = levels_data.get('summer', level.summer)
-        level.autumn = levels_data.get('autumn', level.autumn)
-        level.spring = levels_data.get('spring', level.spring)
-        if Level.objects.filter(**levels_data).exists():
-            instance.level = Level.objects.get(**levels_data)
-            instance.level.save()
+        difficulty.winter = difficulty_data.get('winter', difficulty.winter)
+        difficulty.summer = difficulty_data.get('summer', difficulty.summer)
+        difficulty.audifficultytumn = difficulty_data.get('autumn', difficulty_data.autumn)
+        difficulty.spring = difficulty_data.get('spring', difficulty.spring)
+        if Difficulty.objects.filter(**difficulty_data).exists():
+            instance.difficulty = Difficulty.objects.get(**difficulty_data)
+            instance.difficulty.save()
         else:
-            instance.level = Level.objects.create(**levels_data)
-            instance.level.save()
+            instance.difficulty = Difficulty.objects.create(**difficulty_data)
+            instance.difficulty.save()
 
         instance.beauty_title = validated_data.get('beauty_title', instance.beauty_title)
         instance.title = validated_data.get('title', instance.title)

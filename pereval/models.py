@@ -41,8 +41,8 @@ class PerevalAdded(models.Model):
     add_time = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(Users, on_delete=models.CASCADE, verbose_name='Ползователь')
     coords = models.ForeignKey('Coords', on_delete=models.CASCADE, verbose_name='Координаты', blank=True, null=True)
-    level = models.ForeignKey(
-        'Level',
+    difficulty = models.ForeignKey(
+        'Difficulty',
         on_delete=models.CASCADE,
         verbose_name='Категория трудности',
         blank=True, null=True
@@ -58,7 +58,7 @@ class PerevalAdded(models.Model):
         return self.title
 
 
-class Level(models.Model):  # ок
+class Difficulty(models.Model):  # ок
     LEVEL_CHOICES = [
         ("н/к", "некатегорийный"),
         ("1А", "1А"),
@@ -69,17 +69,15 @@ class Level(models.Model):  # ок
         ("3Б", "3Б"),
     ]
 
-    winter = models.CharField(max_length=20, choices=LEVEL_CHOICES, verbose_name='Зима', blank=True)
-    summer = models.CharField(max_length=20, choices=LEVEL_CHOICES, verbose_name='Лето', blank=True)
-    autumn = models.CharField(max_length=20, choices=LEVEL_CHOICES, verbose_name='Осень', blank=True)
-    spring = models.CharField(max_length=20, choices=LEVEL_CHOICES, verbose_name='Весна', blank=True)
+    mark = models.CharField(max_length=5, choices=LEVEL_CHOICES, verbose_name='Категория трудности', blank=True)
+
 
     class Meta:
-        verbose_name = "Уровень сложности"
-        verbose_name_plural = "Уровень сложности"
+        verbose_name = "Категория трудности"
+        verbose_name_plural = "Категория трудности"
 
     def __str__(self):
-        return f'зимой: {self.winter}, летом: {self.summer}, осенью: {self.autumn}, весной: {self.spring}'
+        return f'Категория: {self.mark}.'
 
 
 class Coords(models.Model):
