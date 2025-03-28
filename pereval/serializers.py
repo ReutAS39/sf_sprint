@@ -79,10 +79,7 @@ class PerevalSerializer(serializers.ModelSerializer):
         coords_data = validated_data.pop('coords')
         image_data = validated_data.pop('images')
         difficulty_data = validated_data.pop('difficulty')
-        coords = instance.coords
-        difficulty = instance.difficulty
-        print(coords_data)
-        print(coords)
+
         for img in image_data:
             if Images.objects.filter(data=img['data'], title=img['title']).exists():
                 continue
@@ -90,9 +87,6 @@ class PerevalSerializer(serializers.ModelSerializer):
                 image = Images.objects.create(**img)
                 PerevaladdedImages.objects.create(images=image, perevaladded=instance)
 
-        coords.latitude = coords_data.get('latitude', coords.latitude)
-        coords.longitude = coords_data.get('longitude', coords.longitude)
-        coords.height = coords_data.get('height', coords.height)
         if Coords.objects.filter(**coords_data).exists():
             instance.coords = Coords.objects.get(**coords_data)
             instance.coords.save()
@@ -100,7 +94,6 @@ class PerevalSerializer(serializers.ModelSerializer):
             instance.coords = Coords.objects.create(**coords_data)
             instance.coords.save()
 
-        difficulty.mark = difficulty_data.get('mark', difficulty.mark)
         if Difficulty.objects.filter(**difficulty_data).exists():
             instance.difficulty = Difficulty.objects.get(**difficulty_data)
             instance.difficulty.save()
