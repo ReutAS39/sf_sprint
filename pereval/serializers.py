@@ -93,12 +93,14 @@ class PerevalSerializer(serializers.ModelSerializer):
         coords.latitude = coords_data.get('latitude', coords.latitude)
         coords.longitude = coords_data.get('longitude', coords.longitude)
         coords.height = coords_data.get('height', coords.height)
-        coords.save()
+        if Coords.objects.filter(**coords_data).exists():
+            instance.coords = Coords.objects.get(**coords_data)
+            instance.coords.save()
+        else:
+            instance.coords = Coords.objects.create(**coords_data)
+            instance.coords.save()
 
-        difficulty.winter = difficulty_data.get('winter', difficulty.winter)
-        difficulty.summer = difficulty_data.get('summer', difficulty.summer)
-        difficulty.audifficultytumn = difficulty_data.get('autumn', difficulty_data.autumn)
-        difficulty.spring = difficulty_data.get('spring', difficulty.spring)
+        difficulty.mark = difficulty_data.get('mark', difficulty.mark)
         if Difficulty.objects.filter(**difficulty_data).exists():
             instance.difficulty = Difficulty.objects.get(**difficulty_data)
             instance.difficulty.save()
