@@ -28,10 +28,10 @@ class PerevalAdded(models.Model):
     ACCEPTED = 'accepted'
     REJECTED = 'rejected'
     STATUS_CHOICES = [
-        ("new", "новый"),
-        ("pending",  "модератор взял в работу"),
-        ("accepted", "модерация прошла успешно"),
-        ("rejected",  "модерация прошла, информация не принята"),
+        (NEW, "новый"),
+        (PENDING,  "модератор взял в работу"),
+        (ACCEPTED, "модерация прошла успешно"),
+        (REJECTED,  "модерация прошла, информация не принята"),
     ]
 
     beauty_title = models.CharField(max_length=20, verbose_name='Тип')
@@ -39,11 +39,11 @@ class PerevalAdded(models.Model):
     other_titles = models.CharField(max_length=50, blank=True, verbose_name='Другие названия')
     connect = models.CharField(max_length=100, blank=True, verbose_name='Что соединяет')
     add_time = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(Users, on_delete=models.CASCADE, verbose_name='Ползователь')
-    coords = models.ForeignKey('Coords', on_delete=models.CASCADE, verbose_name='Координаты', blank=True, null=True)
+    user = models.ForeignKey(Users, on_delete=models.SET_NULL, verbose_name='Ползователь', null=True)
+    coords = models.ForeignKey('Coords', on_delete=models.SET_NULL, verbose_name='Координаты', blank=True, null=True)
     difficulty = models.ForeignKey(
         'Difficulty',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name='Категория трудности',
         blank=True, null=True
     )
@@ -70,7 +70,6 @@ class Difficulty(models.Model):  # ок
     ]
 
     mark = models.CharField(max_length=5, choices=LEVEL_CHOICES, verbose_name='Категория трудности', blank=True)
-
 
     class Meta:
         verbose_name = "Категория трудности"

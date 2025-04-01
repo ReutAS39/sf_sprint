@@ -33,7 +33,7 @@ class UsersSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Users
-        fields = ('email', 'phone', 'fam', 'name', 'otc',)
+        exclude = ('id',)
         verbose_name = 'Пользователь'
 
 
@@ -42,12 +42,16 @@ class PerevalSerializer(serializers.ModelSerializer):
     coords = CoordsSerializer()
     difficulty = DifficultySerializer()
     images = ImagesSerializer(many=True)
+    status = serializers.CharField(read_only=True)
 
     class Meta:
         model = PerevalAdded
         fields = '__all__'
+        # exclude = ("status",)
+        # fields = ['difficulty', 'user', 'coords', 'images', 'status']
 
     def create(self, validated_data):
+
         users_data = validated_data.pop('user')
         coords_data = validated_data.pop('coords')
         image_data = validated_data.pop('images')
