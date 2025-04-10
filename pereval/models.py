@@ -40,7 +40,7 @@ class PerevalAdded(models.Model):
     connect = models.CharField(max_length=100, blank=True, verbose_name='Что соединяет')
     add_time = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(Users, on_delete=models.SET_NULL, verbose_name='Ползователь', null=True)
-    coords = models.ForeignKey('Coords', on_delete=models.SET_NULL, verbose_name='Координаты', blank=True, null=True)
+    coords = models.OneToOneField('Coords', on_delete=models.SET_NULL, verbose_name='Координаты', blank=True, null=True)
     level = models.ForeignKey(
         'Level',
         on_delete=models.SET_NULL,

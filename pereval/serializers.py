@@ -7,6 +7,7 @@ class CoordsSerializer(serializers.ModelSerializer):
     latitude = serializers.FloatField(min_value=-90.0, max_value=90.0)
     longitude = serializers.FloatField(min_value=-180.0, max_value=180.0)
     height = serializers.IntegerField(max_value=9000)
+
     class Meta:
         model = Coords
         verbose_name = 'Координаты'
@@ -30,7 +31,6 @@ class ImagesSerializer(serializers.ModelSerializer):
 
 class UsersSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
-    # phone = models.CharField(validators=[phone_regex], max_length=14, blank=True)
     fam = serializers.CharField(max_length=20)
     name = serializers.CharField(max_length=20)
     otc = serializers.CharField(max_length=30)

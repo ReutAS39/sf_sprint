@@ -131,7 +131,7 @@ GET /submitData/?user__email=<email>
 
 
 ```python
-GET /swagger/
+GET /docs/
 ```
 *Подробная документация по работе с API.*
 
@@ -162,4 +162,8 @@ GET /swagger/
    pip install -r requirements.txt
    ```
 
+*5. Запустите сервер:*
 
+   ```bash
+   python manage.py runserver
+   ```
