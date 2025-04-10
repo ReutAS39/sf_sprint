@@ -13,7 +13,7 @@ class PerevalAdd(APIView):
         description="Добавление перевала",
         request=PerevalSerializer,
         responses={
-            201: OpenApiResponse(response=PerevalSerializer, description="Перевал успешно создан"),
+            200: OpenApiResponse(response=PerevalSerializer, description="Перевал успешно создан"),
             400: OpenApiResponse(description="Ошибки валидации"),
             500: OpenApiResponse(description="Ошибка при выполнении операции")
         }
@@ -22,7 +22,7 @@ class PerevalAdd(APIView):
         serializer = PerevalSerializer(data=request.data)
         if serializer.is_valid():
             pereval = serializer.save()
-            return Response({"status": "Перевал добавлен", "id": pereval.id}, status=status.HTTP_201_CREATED)
+            return Response(data={"status": 200, "message": None, 'id':  pereval.id}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -66,7 +66,8 @@ class PerevalUpdate(APIView):
         serializer = PerevalSerializer(pereval, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({'state': 1, 'message': 'Данные успешно отредактированы', "Перевал": serializer.data})
+            return Response({'state': 1, 'message': 'Данные успешно отредактированы', "Перевал": serializer.data},
+                            status.HTTP_200_OK)
         return Response({'state': 0, 'message': 'Данные не могут быть отредактированы'},
                         status=status.HTTP_400_BAD_REQUEST)
 

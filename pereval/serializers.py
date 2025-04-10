@@ -5,7 +5,7 @@ from pereval.models import PerevalAdded, Coords, Level, Users, Images, Perevalad
 
 class CoordsSerializer(serializers.ModelSerializer):
     latitude = serializers.FloatField(min_value=-90.0, max_value=90.0)
-    longitude = serializers.FloatField(min_value=-180.0, max_value= 180.0)
+    longitude = serializers.FloatField(min_value=-180.0, max_value=180.0)
     height = serializers.IntegerField(max_value=9000)
     class Meta:
         model = Coords
@@ -30,6 +30,10 @@ class ImagesSerializer(serializers.ModelSerializer):
 
 class UsersSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
+    # phone = models.CharField(validators=[phone_regex], max_length=14, blank=True)
+    fam = serializers.CharField(max_length=20)
+    name = serializers.CharField(max_length=20)
+    otc = serializers.CharField(max_length=30)
 
     class Meta:
         model = Users
@@ -48,19 +52,19 @@ class PerevalSerializer(serializers.ModelSerializer):
         model = PerevalAdded
         fields = '__all__'
         # exclude = ("status",)
-        # fields = ['difficulty', 'user', 'coords', 'images', 'status']
+        # fields = ['level', 'user', 'coords', 'images', 'status']
 
     def create(self, validated_data):
 
         users_data = validated_data.pop('user')
         coords_data = validated_data.pop('coords')
         image_data = validated_data.pop('images')
-        difficulty_data = validated_data.pop('difficulty')
+        level_data = validated_data.pop('level')
 
-        if Level.objects.filter(**difficulty_data).exists():
-            difficulty = Level.objects.get(**difficulty_data)
+        if Level.objects.filter(**level_data).exists():
+            level = Level.objects.get(**level_data)
         else:
-            difficulty = Level.objects.create(**difficulty_data)
+            level = Level.objects.create(**level_data)
 
         if Coords.objects.filter(**coords_data).exists():
             coords = Coords.objects.get(**coords_data)
@@ -72,7 +76,7 @@ class PerevalSerializer(serializers.ModelSerializer):
         else:
             user = Users.objects.create(**users_data)
 
-        pereval = PerevalAdded.objects.create(user=user, coords=coords, difficulty=difficulty, **validated_data)
+        pereval = PerevalAdded.objects.create(user=user, coords=coords, level=level, **validated_data)
         for img in image_data:
             image = Images.objects.create(**img)
             PerevaladdedImages.objects.create(images=image, perevaladded=pereval)
@@ -82,7 +86,7 @@ class PerevalSerializer(serializers.ModelSerializer):
 
         coords_data = validated_data.pop('coords')
         image_data = validated_data.pop('images')
-        difficulty_data = validated_data.pop('difficulty')
+        level_data = validated_data.pop('level')
 
         for img in image_data:
             if Images.objects.filter(data=img['data'], title=img['title']).exists():
@@ -98,12 +102,12 @@ class PerevalSerializer(serializers.ModelSerializer):
             instance.coords = Coords.objects.create(**coords_data)
             instance.coords.save()
 
-        if Level.objects.filter(**difficulty_data).exists():
-            instance.difficulty = Level.objects.get(**difficulty_data)
-            instance.difficulty.save()
+        if Level.objects.filter(**level_data).exists():
+            instance.level = Level.objects.get(**level_data)
+            instance.level.save()
         else:
-            instance.difficulty = Level.objects.create(**difficulty_data)
-            instance.difficulty.save()
+            instance.level = Level.objects.create(**level_data)
+            instance.level.save()
 
         instance.beauty_title = validated_data.get('beauty_title', instance.beauty_title)
         instance.title = validated_data.get('title', instance.title)
