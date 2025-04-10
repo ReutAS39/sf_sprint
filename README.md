@@ -43,23 +43,23 @@ POST api/submitData/
 		"fam": "Пупкин", 
 		"name": "Василий", 
 		"otc": "Иванович", 
-		"phone": "+7 555 55 55"
-		}, 
+		"phone": "+75555555087"
+	    }, 
    "coords":{
 		"latitude": "45.3842",
 		"longitude": "7.1525",
 		"height": "1200"
 		},
-# Категория трудности.
-  level:{
-		"mark": "1А",
-		},
- 
-  images: [{data:"<картинка1>", title:"Седловина"}, {data:"<картинка>", title:"Подъём"}]
+  "level": {
+        "mark": "3А"
+        },
+  "images":[
+        {"data": "<картинка1>", "title": "Седловина"}, 
+        {"data": "<картинка>", "title": "Подъём"}],
   "beauty_title": "пер. ",
   "title": "Пхия",
   "other_titles": "Триев",
-  "connect": "", // что соединяет, текстовое поле
+  "connect": ""
 }
 
 ```
