@@ -41,8 +41,8 @@ class PerevalAdded(models.Model):
     add_time = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(Users, on_delete=models.SET_NULL, verbose_name='Ползователь', null=True)
     coords = models.ForeignKey('Coords', on_delete=models.SET_NULL, verbose_name='Координаты', blank=True, null=True)
-    difficulty = models.ForeignKey(
-        'Difficulty',
+    level = models.ForeignKey(
+        'Level',
         on_delete=models.SET_NULL,
         verbose_name='Категория трудности',
         blank=True, null=True
@@ -58,7 +58,7 @@ class PerevalAdded(models.Model):
         return self.title
 
 
-class Difficulty(models.Model):  # ок
+class Level(models.Model):  # ок
     LEVEL_CHOICES = [
         ("н/к", "некатегорийный"),
         ("1А", "1А"),
